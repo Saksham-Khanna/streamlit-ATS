@@ -42,7 +42,8 @@ input_text = st.text_area("Job Description", key="input")
 uploaded_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
 
 submit1 = st.button("Tell me about this resume")
-submit3 = st.button("Match Percentage")
+submit2 = st.button("Match Percentage")
+submit3 = st.button("Suggest Missing Sections")
 
 input_prompt1 = """
 You are an experienced HR with Tech Experience in the field of data science, full stack web development, Big Data, DevOps, and Data Analyst. 
@@ -51,11 +52,22 @@ Please share your insights in a detailed manner on the candidate's suitability f
 Additionally offer advice for enhancing the resume to better align with the job description provided.
 """
 
-input_prompt3 = """
+input_prompt2 = """
 You are a skilled ATS (Application Tracking System) scanner with a deep understanding of data science, full stack web development, Big Data, DevOps, and Data Analyst. 
 Your task is to evaluate the resume against the job description and provide a match percentage. 
 The match percentage should reflect how well the resume aligns with the job description, considering relevant skills, experience, and qualifications. 
 Please provide a detailed explanation of the factors contributing to the match percentage.
+"""
+
+input_prompt3 = """
+You are an ATS (Applicant Tracking System) and career coach. 
+Analyze the resume text and Your task:
+1. Identify which important sections are missing (e.g., Projects, Certifications, Skills, Education, Experience, Achievements, Summary).  
+2. Suggest only the sections that are missing, do NOT rewrite the entire resume.  
+3. For each missing section, recommend what type of content should be added (short bullet points).  
+
+Respond clearly in a structured format:
+- Missing Section: Suggested content idea
 """
 
 if submit1:
@@ -63,6 +75,16 @@ if submit1:
         pdf_content = input_pdf_setup(uploaded_file) 
         if pdf_content:
             response = get_gemini_response(input_prompt1, pdf_content, input_text)
+            st.subheader("The response is:")
+            st.write(response)
+    else:
+        st.warning("⚠️ Please upload a PDF before clicking this button.")
+
+if submit3:
+    if uploaded_file:
+        pdf_content = input_pdf_setup(uploaded_file) 
+        if pdf_content:
+            response = get_gemini_response(input_prompt3, pdf_content, input_text)
             st.subheader("The response is:")
             st.write(response)
     else:
